@@ -1,0 +1,564 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trang Giỏ Hàng - CellphoneS</title>
+    <!-- Nhúng Font Awesome để lấy icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f8; /* Nền xám nhạt */
+        }
+
+        /* --- HEADER --- */
+        header {
+            background: linear-gradient(to right, #da2128, #e8384b);
+            color: white;
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+            .logo img {
+                height: 40px;
+                object-fit: contain;
+                background-color: white; /* Nền trắng tạm cho logo nếu cần */
+                border-radius: 4px;
+            }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border-radius: 8px;
+            padding: 10px 15px;
+            flex-grow: 1;
+            max-width: 500px;
+        }
+
+            .search-box i {
+                color: #555;
+                font-size: 18px;
+                margin-right: 10px;
+            }
+
+            .search-box input {
+                border: none;
+                outline: none;
+                width: 100%;
+                font-size: 15px;
+                color: #333;
+            }
+
+        /* Menu Navigation */
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+            nav a:hover {
+                color: #ffcccc;
+            }
+
+        /* Cụm User & Giỏ hàng trên Header */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .cart-section {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .cart-icon-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background-color: #f6891f;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 50px;
+            border: 1px solid white;
+        }
+
+        .user-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+
+        /* --- LAYOUT CONTAINER CHÍNH --- */
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+            align-items: flex-start;
+        }
+
+
+        /* --- CỘT TRÁI: DANH SÁCH SẢN PHẨM --- */
+        .cart-main {
+            flex: 2;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+            .cart-main h2 {
+                border-bottom: 1px solid #eee;
+                padding-bottom: 15px;
+                margin-bottom: 20px;
+                font-size: 20px;
+                color: #333;
+            }
+
+        .cart-item {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+            .cart-item:last-child {
+                border-bottom: none;
+                margin-bottom: 0;
+                padding-bottom: 0;
+            }
+
+            .cart-item img {
+                width: 120px;
+                height: 120px;
+                object-fit: contain;
+                margin-right: 20px;
+            }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-title {
+            font-size: 16px;
+            color: #007185;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .item-price {
+            font-weight: bold;
+            font-size: 16px;
+            color: #d70018; /* Đỏ giống CellphoneS */
+            margin-bottom: 15px;
+        }
+
+        .qty-control {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+            .qty-control button {
+                background-color: #f4f6f8;
+                border: 1px solid #ddd;
+                width: 30px;
+                height: 30px;
+                cursor: pointer;
+                border-radius: 4px;
+                font-size: 16px;
+                font-weight: bold;
+            }
+
+                .qty-control button:hover {
+                    background-color: #e0e0e0;
+                }
+
+        .qty-input {
+            width: 50px;
+            height: 30px;
+            text-align: center;
+            border: 1px solid #ddd;
+            margin: 0 5px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .item-subtotal {
+            font-size: 14px;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .item-total-value {
+            font-weight: bold;
+            color: #d70018;
+        }
+
+
+        /* --- CỘT PHẢI: THÔNG TIN ĐƠN HÀNG (SIDEBAR) --- */
+        .order-summary {
+            flex: 1;
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 20px; /* Cố định khi cuộn trang */
+        }
+
+            .order-summary h3 {
+                font-size: 16px;
+                color: #333;
+                margin-bottom: 20px;
+            }
+
+        .promo-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fef5f5;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+        }
+
+        .promo-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+
+            .promo-left i {
+                color: #d70018;
+                font-size: 18px;
+                transform: rotate(-45deg);
+            }
+
+        .btn-promo {
+            background-color: #ffe6e6;
+            color: #d70018;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #eee;
+            margin: 15px 0;
+        }
+
+        .total-row {
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .total-label {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+            .total-label strong {
+                color: #333;
+                font-size: 15px;
+            }
+
+            .total-label small {
+                color: #888;
+                font-size: 12px;
+            }
+
+        .total-value {
+            font-weight: bold;
+            color: #d70018;
+            font-size: 18px;
+        }
+
+        .btn-buy-now {
+            width: 100%;
+            background-color: #d70018; /* Đỏ mận khi có thể mua */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+            .btn-buy-now:hover {
+                background-color: #c00015;
+            }
+
+            .btn-buy-now strong {
+                font-size: 16px;
+            }
+
+            .btn-buy-now span {
+                font-size: 12px;
+                font-weight: normal;
+            }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <!-- Thay bằng đường dẫn ảnh thật của bạn (VD: ~/Content/img/cellphones.jpg) -->
+            <span>Trang giỏ hàng</span>
+        </div>
+
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Bạn muốn mua gì hôm nay?">
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="#">Trang chủ</a></li>
+                <li><a href="#">Sản phẩm</a></li>
+                <li><a href="#">Giỏ hàng</a></li>
+                <li><a href="#">Liên hệ</a></li>
+            </ul>
+        </nav>
+
+        <div class="header-actions">
+            <div class="cart-section">
+                <span>Giỏ hàng</span>
+                <div class="cart-icon-wrapper">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="header-cart-qty">0</span>
+                </div>
+            </div>
+            <div class="user-btn">
+                <span>Nguyên</span>
+                <i class="far fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Cột trái: Chi tiết giỏ hàng -->
+        <div class="cart-main">
+            <h2>Giỏ hàng của bạn</h2>
+
+            <!-- LƯU Ý QUAN TRỌNG: data-price phải viết là số liền (VD: 36790000) để JS tính toán được -->
+            <div class="cart-item" data-price="36790000">
+                <img src="~/Content/img/iphone-18-pro-den_1788996839_1.png" alt="iPhone 18 Pro">
+                <div class="item-info">
+                    <div class="item-title">iPhone 18 Pro - Đen</div>
+                    <div class="item-price">36.790.000đ</div>
+                    <div class="qty-control">
+                        <button class="btn-decrease">-</button>
+                        <input type="number" class="qty-input" value="1" min="1">
+                        <button class="btn-increase">+</button>
+                    </div>
+                    <div class="item-subtotal">Thành tiền: <span class="item-total-value">36.790.000đ</span></div>
+                </div>
+            </div>
+
+            <div class="cart-item" data-price="64990000">
+                <img src="~/Content/img/iphone-duo-1_1789000289_1.jpg" alt="iPhone Duo">
+                <div class="item-info">
+                    <div class="item-title">iPhone Duo - Trắng sáng sao</div>
+                    <div class="item-price">64.990.000đ</div>
+                    <div class="qty-control">
+                        <button class="btn-decrease">-</button>
+                        <input type="number" class="qty-input" value="1" min="1">
+                        <button class="btn-increase">+</button>
+                    </div>
+                    <div class="item-subtotal">Thành tiền: <span class="item-total-value">64.990.000đ</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột phải: Tổng kết đơn hàng -->
+        <div class="order-summary">
+            <h3>Thông tin đơn hàng</h3>
+
+            <div class="promo-section">
+                <div class="promo-left">
+                    <i class="fas fa-ticket-alt"></i>
+                    <span>Áp dụng mã giảm giá</span>
+                </div>
+                <button class="btn-promo">Chọn</button>
+            </div>
+
+            <div class="summary-row">
+                <span>Số lượng sản phẩm</span>
+                <strong id="summary-qty">0</strong>
+            </div>
+            <div class="summary-row">
+                <span>Tổng tiền hàng</span>
+                <strong id="summary-subtotal">0đ</strong>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="summary-row">
+                <span>Giảm giá trực tiếp</span>
+                <span>-</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="summary-row total-row">
+                <div class="total-label">
+                    <strong>TỔNG TIỀN</strong>
+                    <small>(Đã bao gồm VAT)</small>
+                </div>
+                <strong class="total-value" id="summary-total">0đ</strong>
+            </div>
+
+            <button class="btn-buy-now">
+                <strong>MUA NGAY</strong>
+                <span>Giao nhanh từ 2 giờ hoặc nhận tại cửa hàng</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- SCRIPT XỬ LÝ SỐ LƯỢNG VÀ TÍNH TIỀN (Đã sửa lỗi) -->
+    <script>
+        const cartItems = document.querySelectorAll('.cart-item');
+        const headerCartQtyEl = document.getElementById('header-cart-qty');
+        const summaryQtyEl = document.getElementById('summary-qty');
+        const summarySubtotalEl = document.getElementById('summary-subtotal');
+        const summaryTotalEl = document.getElementById('summary-total');
+
+        // Hàm format tiền tệ (Ví dụ: 36790000 -> 36.790.000đ)
+        function formatVND(amount) {
+            return amount.toLocaleString('vi-VN') + 'đ';
+        }
+
+        function updateCart() {
+            let globalQty = 0;
+            let globalPrice = 0;
+
+            cartItems.forEach(item => {
+                // Lấy giá cơ bản từ thuộc tính data-price (Phải là số nguyên)
+                const basePrice = parseFloat(item.getAttribute('data-price'));
+                const qtyInput = item.querySelector('.qty-input');
+                const itemTotalValueEl = item.querySelector('.item-total-value');
+
+                let qty = parseInt(qtyInput.value);
+                if (isNaN(qty) || qty < 1) {
+                    qty = 1;
+                    qtyInput.value = 1;
+                }
+
+                // Tính tiền của từng item
+                const itemTotalPrice = basePrice * qty;
+                itemTotalValueEl.textContent = formatVND(itemTotalPrice);
+
+                // Cộng dồn vào tổng
+                globalQty += qty;
+                globalPrice += itemTotalPrice;
+            });
+
+            // Cập nhật lên giao diện Sidebar và Header
+            headerCartQtyEl.textContent = globalQty;
+            summaryQtyEl.textContent = globalQty;
+            summarySubtotalEl.textContent = formatVND(globalPrice);
+            summaryTotalEl.textContent = formatVND(globalPrice);
+        }
+
+        // Gắn sự kiện click cho các nút cộng trừ
+        cartItems.forEach(item => {
+            const btnDecrease = item.querySelector('.btn-decrease');
+            const btnIncrease = item.querySelector('.btn-increase');
+            const qtyInput = item.querySelector('.qty-input');
+
+            btnDecrease.addEventListener('click', () => {
+                let currentQty = parseInt(qtyInput.value);
+                if (currentQty > 1) {
+                    qtyInput.value = currentQty - 1;
+                    updateCart();
+                }
+            });
+
+            btnIncrease.addEventListener('click', () => {
+                let currentQty = parseInt(qtyInput.value);
+                qtyInput.value = currentQty + 1;
+                updateCart();
+            });
+
+            qtyInput.addEventListener('change', () => {
+                updateCart();
+            });
+        });
+
+        // Chạy lần đầu tiên để tính tổng lúc mới load trang
+        updateCart();
+    </script>
+</body>
+</html>
